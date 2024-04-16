@@ -1,0 +1,62 @@
+{% extends 'orders/header.html' %}
+{% load custom_tags %}
+
+{% block content %}
+
+<!--
+    acá se puede crear una vista de ordenes historicas y se puede manipular para decisir si fueron enviadas o no
+
+Fabián Solar
+esta implementado en el main.js
+
+-->
+
+
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    {% if user.is_superuser %}
+    <h2>(Haz click en los elementos en rojo para marcar como enviado!)</h2>
+    {% else %}
+    <h2> Orders by: {{user.get_username}} </h2>
+    {% endif %}
+
+    <table class="table">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">User Pedido</th>
+          <th scope="col">Fecha</th>
+          <th scope="col">Producto</th>
+          <th scope="col">Valor Total</th>
+        </tr>
+      </thead>
+      <tbody id="orders_table">
+        {% for row in rows %}
+        {% if row.delivered %}
+        <tr class="table-success">
+          {% else %}
+        <tr class="table-danger mark-as-complete">
+          {% endif %}
+          <td>{{row.id}}</td>
+          <td>{{row.username}}</td>
+          <td>{{row.time_of_order}}</td>
+          <td>
+            <ul>
+              {% for item in row.order|format_cart %}
+              <li>{{item|format_cart_item}}</li>
+              {% endfor %}
+            </ul>
+          </td>
+          <td>£{{row.price}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+
+
+
+{% endblock %}
